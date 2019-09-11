@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using street.Filters;
 using street.Models;
 
 namespace street
@@ -30,6 +31,7 @@ namespace street
             services.AddDbContext<MyContext>(opt =>
                 opt.UseInMemoryDatabase("StreetView"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddScoped<AuthFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

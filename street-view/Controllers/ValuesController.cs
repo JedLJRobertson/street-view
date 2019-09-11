@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using street.Filters;
 
 namespace street_view.Controllers
 {
@@ -19,6 +20,7 @@ namespace street_view.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
+        [ServiceFilter(typeof(AuthFilter))]
         public ActionResult<string> Get(int id)
         {
             return "value";
