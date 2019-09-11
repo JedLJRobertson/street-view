@@ -16,11 +16,6 @@ namespace street.Filters
         public AuthFilter(MyContext context)
         {
             _context = context;
-
-            if (_context.Tokens.Count() == 0)
-            {
-                _context.Add(new AuthToken { Id = "test" });
-            }
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)

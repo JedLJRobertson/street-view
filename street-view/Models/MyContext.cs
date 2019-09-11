@@ -16,5 +16,6 @@ public class MyContext : DbContext
 
     public DbSet<ReportItem> Reports { get; set; }
     public DbSet<AuthToken> Tokens { get; set; }
+    public DbSet<User> Users { get; set; }
 }
 }
