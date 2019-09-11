@@ -40,6 +40,13 @@ namespace street.Filters
             {
                 context.Result = new UnauthorizedResult();
             }
+
+            if (authToken.Expires < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            {
+                context.Result = new UnauthorizedResult();
+
+                _context.Tokens.Remove(authToken);
+            }
         }
     }
 }

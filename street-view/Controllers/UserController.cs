@@ -48,7 +48,8 @@ namespace street.Controllers
             var token = new AuthToken
             {
                 Id = Guid.NewGuid().ToString(),
-                User = user
+                User = user,
+                Expires = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600*72 // TODO: Configurable
             };
 
             _context.Tokens.Add(token);

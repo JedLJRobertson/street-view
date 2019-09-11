@@ -9,6 +9,7 @@ namespace street.Dto
     public class AuthTokenDto
     {
         public string Id { get; set; }
+        public long Expires { get; set; }
 
         public AuthTokenDto()
         {
@@ -18,6 +19,7 @@ namespace street.Dto
         public AuthTokenDto(AuthToken token)
         {
             Id = token.Id;
+            Expires = token.Expires;
         }
     }
 }
