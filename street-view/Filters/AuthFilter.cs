@@ -25,11 +25,13 @@ namespace street.Filters
             if (!context.HttpContext.Request.Headers.TryGetValue("Authorization", out token))
             {
                 context.Result = new UnauthorizedResult();
+                return;
             }
 
             if (token.Count() != 1)
             {
                 context.Result = new UnauthorizedResult();
+                return;
             }
 
             var tokenStr = token.Single();
@@ -39,6 +41,7 @@ namespace street.Filters
             if (authToken == null)
             {
                 context.Result = new UnauthorizedResult();
+                return;
             }
 
             if (authToken.Expires < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
@@ -46,6 +49,7 @@ namespace street.Filters
                 context.Result = new UnauthorizedResult();
 
                 _context.Tokens.Remove(authToken);
+                return;
             }
         }
     }
