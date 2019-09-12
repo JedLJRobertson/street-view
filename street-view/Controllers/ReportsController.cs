@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+using street.Dto;
+using street.Filters;
 using street.Models;
+using System.Runtime.Serialization.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,8 +21,10 @@ namespace street.Controllers
     public class ReportsController : ControllerBase
     {
         private readonly MyContext _context;
+        private readonly string _recognizerService;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public ReportsController(MyContext context)
+        public ReportsController(MyContext context, IHttpClientFactory clientFactory)
         {
             _context = context;
 
@@ -24,6 +32,10 @@ namespace street.Controllers
             {
                 InitExampleDb();
             }
+
+            _recognizerService = "http://localhost:8080/?country_code=US";
+
+            _clientFactory = clientFactory;
         }
 
         private void InitExampleDb()
@@ -52,6 +64,24 @@ namespace street.Controllers
             }
 
             return report;
+        }
+
+        [ServiceFilter(typeof(AuthFilter))]
+        [HttpPost("recognize")]
+        public async Task<ActionResult<Object>> RecognizePlate(IFormFile file)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, _recognizerService);
+            request.Content = new StreamContent(file.OpenReadStream());
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await client.SendAsync(request);
+
+            var serializer = new DataContractJsonSerializer(typeof(ALPRReturnDto));
+
+            var result = serializer.ReadObject(await response.Content.ReadAsStreamAsync());
+
+            return serializer.ReadObject(await response.Content.ReadAsStreamAsync());
         }
     }
 }
